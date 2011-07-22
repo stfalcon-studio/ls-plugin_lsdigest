@@ -2,7 +2,7 @@
 <?php
 /* ---------------------------------------------------------------------------
  * @Plugin Name: LsDigest
- * @Plugin Id: LsDigest
+ * @Plugin Id: lsdigest
  * @Plugin URI:
  * @Description:
  * @Author: stfalcon-studio
