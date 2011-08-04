@@ -26,10 +26,4 @@ $config['SenderUserLogin'] = 'stfalcon';
 // Формат даты для темы письма
 $config['DateFormat'] = 'Y-m-d';
 
-// Фильтр по языку пользователя
-$config['MailingLanguages'] = array(
-    'russian',
-    'ukrainian',
-);
-
 return $config;

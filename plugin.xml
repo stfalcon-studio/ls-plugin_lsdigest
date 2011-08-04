@@ -7,15 +7,17 @@
         <lang name="default">Web-studio stfalcon.com</lang>
     </author>
     <homepage>http://stfalcon.com</homepage>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <requires>
         <livestreet>0.4.2</livestreet>
         <plugins>
 	    <plugin name="Mailing (большие рассылки)" version="0.2.0" condition=">=">mailing</plugin>
+	    <plugin name="L10n" version="0.2.1" condition=">=">l10n</plugin>
         </plugins>
     </requires>
     <description>
-        <lang name="default">Получает материалы за определенный период, и с помощью CRON'а генерирует задачу для рассылки</lang>
+        <lang name="default">Получает материалы за определенный период, и с помощью CRON создает задачу для рассылки</lang>
+        <lang name="ukrainian">Отримує матеріали за певний період, і за допомогою CRON створює задачу для розсилки</lang>
     </description>
     <delegate>
         <module></module>
