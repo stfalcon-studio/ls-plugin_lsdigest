@@ -22,6 +22,12 @@ require_once($sDirRoot . "/engine/classes/Cron.class.php");
 class CreateMailingDigest extends Cron {
 
     public function Client() {
+        
+        if (!in_array('lsdigest',$this->oEngine->Plugin_GetActivePlugins())) {
+            echo "LsDigest plugin doesn't enabled! Please enable its before running." . PHP_EOL;
+            return;    
+        }
+        
         // Set current date and time
         $oCurrentTime = new DateTime();
 
