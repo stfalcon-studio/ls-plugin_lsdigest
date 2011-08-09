@@ -22,12 +22,29 @@ require_once($sDirRoot . "/engine/classes/Cron.class.php");
 class CreateMailingDigest extends Cron {
 
     public function Client() {
-        
-        if (!in_array('lsdigest',$this->oEngine->Plugin_GetActivePlugins())) {
+
+        $readyStatus = true;
+
+        // Get active plugins
+        $activePlugins = $this->oEngine->Plugin_GetActivePlugins();
+
+        //  Checking plugin self status
+        if (!in_array('lsdigest', $activePlugins)) {
             echo "LsDigest plugin doesn't enabled! Please enable its before running." . PHP_EOL;
-            return;    
+            $readyStatus = false;
         }
-        
+
+        //  Checking required plugin status
+        if (!in_array('mailing', $activePlugins)) {
+            echo "Mailing plugin doesn't enabled! Please enable its before running." . PHP_EOL;
+            $readyStatus = false;
+        }
+
+        if ($readyStatus === false) {
+            // The script isn't ready for launch
+            return;
+        }
+
         // Set current date and time
         $oCurrentTime = new DateTime();
 
@@ -54,34 +71,50 @@ class CreateMailingDigest extends Cron {
 
         $this->oEngine->Viewer_VarAssign();
 
-        // Get allowed languages
-        $aLangs = $this->oEngine->PluginL10n_L10n_GetAllowedLangsAliases();
 
-        // Disable getting lang from url
-        Config::Set('plugin.l10n.lang_in_url', 1);
+        //  Checking required plugin status
+        if ($l10nActive = in_array('l10n', $activePlugins)) {
+            // Get allowed languages
+            $aLangs = array_keys($this->oEngine->PluginL10n_L10n_GetAllowedLangsAliases());
 
-        foreach ($aLangs as $sLang => $sLangCode) {
+            // Disable getting lang from url
+            Config::Set('plugin.l10n.lang_in_url', 1);
+        } else {
+            $aLangs = array(Config::Get('lang.default'));
+        }
+
+        foreach ($aLangs as $sLang) {
 
             // Set current lang
-            Config::Set('lang.current', $sLang);
+            if ($l10nActive){
+                Config::Set('lang.current', $sLang);
+                
+                $this->oEngine->Lang_SetLang($sLang);
+            }
 
             // Get all top topics for period
             $aTopics = $this->oEngine->Topic_GetTopicsRatingByDate($sStartTime, (int) Config::Get('plugin.lsdigest.NumberOfMaterials'));
 
             if (!count($aTopics)) {
-                echo "No data for mailing for {$sLang} language." . PHP_EOL;
+                $msg = "No data for mailing";
+
+                if ($l10nActive) {
+                    $msg .= " on {$sLang} language.";
+                }
+
+                echo $msg . PHP_EOL;
+
                 continue;
             }
 
             $this->oEngine->Viewer_Assign('aTopics', $aTopics);
 
-
             // Create Mailing task
             $oMailing = new PluginMailing_ModuleMailing_EntityMailing();
-
+            
+            $oMailing->setMailingLang($l10nActive ? array($sLang) : array());
+            
             $oMailing->setSendByUserId($oUserSender->GetId());
-
-            $this->oEngine->Lang_SetLang($sLang);
 
             // Mail title
             $aValuesMap = array(
@@ -101,14 +134,26 @@ class CreateMailingDigest extends Cron {
 
             $oMailing->setMailingText($sText);
 
-            $oMailing->setMailingLang(array($sLang));
-
             $oMailing->setMailingDate($sCurrentTime);
 
             if ($this->oEngine->PluginMailing_ModuleMailing_AddMailing($oMailing)) {
-                echo "Mailing task for {$sLang} language #{$oMailing->getMailingId()} created successfully at {$sCurrentTime}" . PHP_EOL;
+                
+                $msg = "Mailing task ";
+                if ($l10nActive) {
+                    $msg .= "for {$sLang} language ";
+                }
+                $msg .= "#{$oMailing->getMailingId()} created successfully at {$sCurrentTime}";
+
+                echo $msg . PHP_EOL;
             } else {
-                echo "No data available for a new mailing task on {$sLang} language!" . PHP_EOL;
+
+                $msg = "No data available for a new mailing task";
+
+                if ($l10nActive) {
+                    $msg .= " on {$sLang} language!";
+                }
+
+                echo $msg . PHP_EOL;
             }
         }
     }
