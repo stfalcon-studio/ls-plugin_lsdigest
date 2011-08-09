@@ -23,24 +23,24 @@ class CreateMailingDigest extends Cron {
 
     public function Client() {
 
-        $readyStatus = true;
+        $bReadyStatus = true;
 
         // Get active plugins
-        $activePlugins = $this->oEngine->Plugin_GetActivePlugins();
+        $aActivePlugins = $this->oEngine->Plugin_GetActivePlugins();
 
         //  Checking plugin self status
-        if (!in_array('lsdigest', $activePlugins)) {
+        if (!in_array('lsdigest', $aActivePlugins)) {
             echo "LsDigest plugin doesn't enabled! Please enable its before running." . PHP_EOL;
-            $readyStatus = false;
+            $bReadyStatus = false;
         }
 
-        //  Checking required plugin status
-        if (!in_array('mailing', $activePlugins)) {
+        //  Checking Mailing plugin status
+        if (!in_array('mailing', $aActivePlugins)) {
             echo "Mailing plugin doesn't enabled! Please enable its before running." . PHP_EOL;
-            $readyStatus = false;
+            $bReadyStatus = false;
         }
 
-        if ($readyStatus === false) {
+        if ($bReadyStatus === false) {
             // The script isn't ready for launch
             return;
         }
@@ -71,9 +71,10 @@ class CreateMailingDigest extends Cron {
 
         $this->oEngine->Viewer_VarAssign();
 
-
         //  Checking required plugin status
-        if ($l10nActive = in_array('l10n', $activePlugins)) {
+        $bL10nActive = in_array('l10n', $aActivePlugins);
+        
+        if ($bL10nActive) {
             // Get allowed languages
             $aLangs = array_keys($this->oEngine->PluginL10n_L10n_GetAllowedLangsAliases());
 
@@ -86,7 +87,7 @@ class CreateMailingDigest extends Cron {
         foreach ($aLangs as $sLang) {
 
             // Set current lang
-            if ($l10nActive){
+            if ($bL10nActive){
                 Config::Set('lang.current', $sLang);
                 
                 $this->oEngine->Lang_SetLang($sLang);
@@ -96,13 +97,13 @@ class CreateMailingDigest extends Cron {
             $aTopics = $this->oEngine->Topic_GetTopicsRatingByDate($sStartTime, (int) Config::Get('plugin.lsdigest.NumberOfMaterials'));
 
             if (!count($aTopics)) {
-                $msg = "No data for mailing";
+                $sMessage = "No data for mailing";
 
-                if ($l10nActive) {
-                    $msg .= " on {$sLang} language.";
+                if ($bL10nActive) {
+                    $sMessage .= " on {$sLang} language.";
                 }
 
-                echo $msg . PHP_EOL;
+                echo $sMessage . PHP_EOL;
 
                 continue;
             }
@@ -112,7 +113,7 @@ class CreateMailingDigest extends Cron {
             // Create Mailing task
             $oMailing = new PluginMailing_ModuleMailing_EntityMailing();
             
-            $oMailing->setMailingLang($l10nActive ? array($sLang) : array());
+            $oMailing->setMailingLang($bL10nActive ? array($sLang) : array());
             
             $oMailing->setSendByUserId($oUserSender->GetId());
 
@@ -138,22 +139,22 @@ class CreateMailingDigest extends Cron {
 
             if ($this->oEngine->PluginMailing_ModuleMailing_AddMailing($oMailing)) {
                 
-                $msg = "Mailing task ";
-                if ($l10nActive) {
-                    $msg .= "for {$sLang} language ";
+                $sMessage = "Mailing task ";
+                if ($bL10nActive) {
+                    $sMessage .= "for {$sLang} language ";
                 }
-                $msg .= "#{$oMailing->getMailingId()} created successfully at {$sCurrentTime}";
+                $sMessage .= "#{$oMailing->getMailingId()} created successfully at {$sCurrentTime}";
 
-                echo $msg . PHP_EOL;
+                echo $sMessage . PHP_EOL;
             } else {
 
-                $msg = "No data available for a new mailing task";
+                $sMessage = "No data available for a new mailing task";
 
-                if ($l10nActive) {
-                    $msg .= " on {$sLang} language!";
+                if ($bL10nActive) {
+                    $sMessage .= " on {$sLang} language!";
                 }
 
-                echo $msg . PHP_EOL;
+                echo $sMessage . PHP_EOL;
             }
         }
     }
