@@ -13,21 +13,37 @@
  */
 define('SYS_HACKER_CONSOLE', false);
 
-//error_reporting(E_ALL);
-//ini_set('display_errors', 1);
-
 $sDirRoot = dirname(realpath((dirname(__FILE__)) . "/../../../"));
 set_include_path(get_include_path() . PATH_SEPARATOR . $sDirRoot);
 chdir($sDirRoot);
 require_once($sDirRoot . "/config/loader.php");
 require_once($sDirRoot . "/engine/classes/Cron.class.php");
 
-class CreateMailingDigest extends Cron
-{
+class CreateMailingDigest extends Cron {
 
-    public function Client()
-    {
+    public function Client() {
 
+        $bReadyStatus = true;
+
+        // Get active plugins
+        $aActivePlugins = $this->oEngine->Plugin_GetActivePlugins();
+
+        //  Checking plugin self status
+        if (!in_array('lsdigest', $aActivePlugins)) {
+            echo "LsDigest plugin doesn't enabled! Please enable its before running." . PHP_EOL;
+            $bReadyStatus = false;
+        }
+
+        //  Checking Mailing plugin status
+        if (!in_array('mailing', $aActivePlugins)) {
+            echo "Mailing plugin doesn't enabled! Please enable its before running." . PHP_EOL;
+            $bReadyStatus = false;
+        }
+
+        if ($bReadyStatus === false) {
+            // The script isn't ready for launch
+            return;
+        }
 
         // Set current date and time
         $oCurrentTime = new DateTime();
@@ -40,19 +56,10 @@ class CreateMailingDigest extends Cron
 
         $oInterval = $oCurrentTime->sub(new DateInterval("P{$iPeriodInDays}D"));
 
-
         // Set start of  period date and time
         $sStartTime = $oInterval->format('Y-m-d 00:00:00');
 
         $sStartDate = $oInterval->format(Config::Get('plugin.lsdigest.DateFormat'));
-
-        // Get all top topics for period
-        $aTopics = $this->oEngine->Topic_GetTopicsRatingByDate($sStartTime, (int) Config::Get('plugin.lsdigest.NumberOfMaterials'));
-
-        if (!count($aTopics)) {
-            echo "No data for mailing." . PHP_EOL;
-            return;
-        }
 
         // Get current user (sender)
         $oUserSender = $this->oEngine->User_GetUserByLogin(Config::Get('plugin.lsdigest.SenderUserLogin'));
@@ -62,42 +69,93 @@ class CreateMailingDigest extends Cron
             return;
         }
 
-
         $this->oEngine->Viewer_VarAssign();
 
-        $this->oEngine->Viewer_Assign('aTopics', $aTopics);
+        //  Checking required plugin status
+        $bL10nActive = in_array('l10n', $aActivePlugins);
+        
+        if ($bL10nActive) {
+            // Get allowed languages
+            $aLangs = array_keys($this->oEngine->PluginL10n_L10n_GetAllowedLangsAliases());
 
-        // Create Mailing task
-        $oMailing = new PluginMailing_ModuleMailing_EntityMailing();
-
-        $oMailing->setSendByUserId($oUserSender->GetId());
-
-        // Mail title
-        $sTitle = strtr($this->oEngine->Lang_Get('plugin_lsdigest_mail_title'), array(
-		/**
-		 * Variables for custom subject
-		 *
-		 * - Лучшие топики с %%startDate по %%endDate%% -> Лучшие топики с 01.01.2011 по 07.01.2011
-		 * - Дайджест материалов на %%endDate%% -> Дайджест материалов на 07.01.2011
-		 */
-		'%%startDate%%' => $sStartDate, //Start date
-		'%%endDate%%' => $sCurrentDate, // Current date
-	    )
-        );
-        $oMailing->setMailingTitle($sTitle);
-
-        $sText = trim($this->oEngine->Viewer_Fetch(Plugin::GetTemplatePath('lsdigest') . 'topic_list.tpl'));
-        $oMailing->setMailingText($sText);
-
-        //  $oMailing->setMailingCount($iUsersCount);
-        $oMailing->setMailingLang((array) Config::Get('plugin.lsdigest.MailingLanguages'));
-
-        $oMailing->setMailingDate($sCurrentTime);
-
-        if ($this->oEngine->PluginMailing_ModuleMailing_AddMailing($oMailing)) {
-            echo "Mailing task #{$oMailing->getMailingId()} created successfully at {$sCurrentTime}" . PHP_EOL;
+            // Disable getting lang from url
+            Config::Set('plugin.l10n.lang_in_url', 1);
         } else {
-            echo "No data available for a new mailing task!" . PHP_EOL;
+            $aLangs = array(Config::Get('lang.default'));
+        }
+
+        foreach ($aLangs as $sLang) {
+
+            // Set current lang
+            if ($bL10nActive){
+                Config::Set('lang.current', $sLang);
+                
+                $this->oEngine->Lang_SetLang($sLang);
+            }
+
+            // Get all top topics for period
+            $aTopics = $this->oEngine->Topic_GetTopicsRatingByDate($sStartTime, (int) Config::Get('plugin.lsdigest.NumberOfMaterials'));
+
+            if (!count($aTopics)) {
+                $sMessage = "No data for mailing";
+
+                if ($bL10nActive) {
+                    $sMessage .= " on {$sLang} language.";
+                }
+
+                echo $sMessage . PHP_EOL;
+
+                continue;
+            }
+
+            $this->oEngine->Viewer_Assign('aTopics', $aTopics);
+
+            // Create Mailing task
+            $oMailing = new PluginMailing_ModuleMailing_EntityMailing();
+            
+            $oMailing->setMailingLang($bL10nActive ? array($sLang) : array());
+            
+            $oMailing->setSendByUserId($oUserSender->GetId());
+
+            // Mail title
+            $aValuesMap = array(
+                /**
+                 * Variables for custom subject
+                 *
+                 * - Лучшие топики с %%startDate по %%endDate%% -> Лучшие топики с 01.01.2011 по 07.01.2011
+                 * - Дайджест материалов на %%endDate%% -> Дайджест материалов на 07.01.2011
+                 */
+                'startDate' => $sStartDate, //Start date
+                'endDate' => $sCurrentDate, // Current date
+            );
+
+            $oMailing->setMailingTitle($this->oEngine->Lang_Get('plugin_lsdigest_mail_title', $aValuesMap));
+
+            $sText = trim($this->oEngine->Viewer_Fetch(Plugin::GetTemplatePath('lsdigest') . 'topic_list.tpl'));
+
+            $oMailing->setMailingText($sText);
+
+            $oMailing->setMailingDate($sCurrentTime);
+
+            if ($this->oEngine->PluginMailing_ModuleMailing_AddMailing($oMailing)) {
+                
+                $sMessage = "Mailing task ";
+                if ($bL10nActive) {
+                    $sMessage .= "for {$sLang} language ";
+                }
+                $sMessage .= "#{$oMailing->getMailingId()} created successfully at {$sCurrentTime}";
+
+                echo $sMessage . PHP_EOL;
+            } else {
+
+                $sMessage = "No data available for a new mailing task";
+
+                if ($bL10nActive) {
+                    $sMessage .= " on {$sLang} language!";
+                }
+
+                echo $sMessage . PHP_EOL;
+            }
         }
     }
 
