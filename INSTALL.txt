@@ -18,12 +18,6 @@ $config['SenderUserLogin'] = 'stfalcon';
 // Формат даты для темы письма
 $config['DateFormat'] = 'Y-m-d';
 
-// Фильтр по языку пользователя
-$config['MailingLanguages'] = array(
-    'russian',
-    'ukrainian',
-);
-
 Настройте шаблоны сообщений, которые хранятся в директории /plugins/lsdigest/templates/language
 В шаблонах можно использовать переменные %%startDate%% и %%endDate%%, которые будут заменены на дату 
 начала и дату окончания выборки.
