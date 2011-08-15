@@ -15,7 +15,8 @@
         </plugins>
     </requires>
     <description>
-        <lang name="default">Получает материалы за определенный период, и с помощью CRON создает задачу для рассылки</lang>
+        <lang name="default">Receives the materials for a certain period, and with CRON creates a task for mailing</lang>
+        <lang name="russian">Получает материалы за определенный период, и с помощью CRON создает задачу для рассылки</lang>
         <lang name="ukrainian">Отримує матеріали за певний період, і за допомогою CRON створює задачу для розсилки</lang>
     </description>
     <delegate>
