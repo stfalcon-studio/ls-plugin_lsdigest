@@ -4,7 +4,7 @@
  * @Plugin Name: LsDigest
  * @Plugin Id: lsdigest
  * @Plugin URI:
- * @Description: 
+ * @Description:
  * @Author: stfalcon-studio
  * @Author URI: http://stfalcon.com
  * @LiveStreet Version: 0.4.2
@@ -19,7 +19,8 @@ if (!class_exists('Plugin')) {
     die('Hacking attemp!!');
 }
 
-class PluginLsdigest extends Plugin {
+class PluginLsdigest extends Plugin
+{
 
     /**
      * Plugin Activation
@@ -27,6 +28,7 @@ class PluginLsdigest extends Plugin {
      * @return boolean
      */
     public function Activate() {
+        $this->Cache_Clean();
         return true;
     }
 
@@ -45,7 +47,7 @@ class PluginLsdigest extends Plugin {
      * @return void
      */
     public function Init() {
-        
+
     }
 
 }
