@@ -19,7 +19,8 @@ chdir($sDirRoot);
 require_once($sDirRoot . "/config/loader.php");
 require_once($sDirRoot . "/engine/classes/Cron.class.php");
 
-class CreateMailingDigest extends Cron {
+class CreateMailingDigest extends Cron
+{
 
     public function Client() {
 
@@ -73,7 +74,7 @@ class CreateMailingDigest extends Cron {
 
         //  Checking required plugin status
         $bL10nActive = in_array('l10n', $aActivePlugins);
-        
+
         if ($bL10nActive) {
             // Get allowed languages
             $aLangs = array_keys($this->oEngine->PluginL10n_L10n_GetAllowedLangsAliases());
@@ -87,9 +88,9 @@ class CreateMailingDigest extends Cron {
         foreach ($aLangs as $sLang) {
 
             // Set current lang
-            if ($bL10nActive){
+            if ($bL10nActive) {
                 Config::Set('lang.current', $sLang);
-                
+
                 $this->oEngine->Lang_SetLang($sLang);
             }
 
@@ -112,9 +113,9 @@ class CreateMailingDigest extends Cron {
 
             // Create Mailing task
             $oMailing = new PluginMailing_ModuleMailing_EntityMailing();
-            
+
             $oMailing->setMailingLang($bL10nActive ? array($sLang) : array());
-            
+
             $oMailing->setSendByUserId($oUserSender->GetId());
 
             // Mail title
@@ -138,7 +139,7 @@ class CreateMailingDigest extends Cron {
             $oMailing->setMailingDate($sCurrentTime);
 
             if ($this->oEngine->PluginMailing_ModuleMailing_AddMailing($oMailing)) {
-                
+
                 $sMessage = "Mailing task ";
                 if ($bL10nActive) {
                     $sMessage .= "for {$sLang} language ";
