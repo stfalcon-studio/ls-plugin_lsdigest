@@ -21,7 +21,7 @@ $config['MailingPeriod'] = 7;
 $config['NumberOfMaterials'] = 10;
 
 // Логин пользователя - отправителя
-$config['SenderUserLogin'] = 'stfalcon';
+$config['SenderUserLogin'] = 'admin';
 
 // Формат даты для темы письма
 $config['DateFormat'] = 'Y-m-d';
