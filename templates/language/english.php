@@ -16,6 +16,6 @@
  * English Language file
  */
 return array(
-    'plugin_lsdigest_mail_title' => 'Digest of the best topics from %%startDate%% till %%endDate%%',
+    'plugin_lsdigest_mail_title' => 'Digest of the best recipes from %%startDate%% till %%endDate%%',
 );
 

@@ -22,7 +22,8 @@ require_once($sDirRoot . "/engine/classes/Cron.class.php");
 class CreateMailingDigest extends Cron
 {
 
-    public function Client() {
+    public function Client()
+    {
 
         $bReadyStatus = true;
 
@@ -97,7 +98,14 @@ class CreateMailingDigest extends Cron
             // Get all top topics for period
             $aTopics = $this->oEngine->Topic_GetTopicsRatingByDate($sStartTime, (int) Config::Get('plugin.lsdigest.NumberOfMaterials'));
 
+            foreach ($aTopics as $key => $oTopic) {
+                if (!$oTopic->getTopicAvatar()) {
+                    unset($aTopics[$key]);
+                }
+            }
+
             if (!count($aTopics)) {
+
                 $sMessage = "No data for mailing";
 
                 if ($bL10nActive) {
@@ -138,12 +146,18 @@ class CreateMailingDigest extends Cron
 
             $oMailing->setMailingDate($sCurrentTime);
 
+            $oMailing->setFilter(array());
+
+            $oMailing->setMailingActive(true);
+            $oMailing->setMailingTalk(Config::Get('plugin.lsdigest.SendTalk'));
+
             if ($this->oEngine->PluginMailing_ModuleMailing_AddMailing($oMailing)) {
 
                 $sMessage = "Mailing task ";
                 if ($bL10nActive) {
                     $sMessage .= "for {$sLang} language ";
                 }
+
                 $sMessage .= "#{$oMailing->getMailingId()} created successfully at {$sCurrentTime}";
 
                 echo $sMessage . PHP_EOL;

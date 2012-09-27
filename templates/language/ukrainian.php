@@ -16,6 +16,6 @@
  * Ukrainian Language file
  */
 return array(
-    'plugin_lsdigest_mail_title' => 'Дайджест кращих записів з %%startDate%% по %%endDate%%',
+    'plugin_lsdigest_mail_title' => 'Дайджест кращих рецептів з %%startDate%% по %%endDate%%',
 );
 

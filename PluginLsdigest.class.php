@@ -19,8 +19,7 @@ if (!class_exists('Plugin')) {
     die('Hacking attemp!!');
 }
 
-class PluginLsdigest extends Plugin
-{
+class PluginLsdigest extends Plugin {
 
     /**
      * Plugin Activation
@@ -28,7 +27,6 @@ class PluginLsdigest extends Plugin
      * @return boolean
      */
     public function Activate() {
-        $this->Cache_Clean();
         return true;
     }
 

@@ -16,6 +16,11 @@
  * Russian Language file
  */
 return array(
-    'plugin_lsdigest_mail_title' => 'Дайджест лучших записей с %%startDate%% по %%endDate%%',
+    'plugin_lsdigest_mail_title' => 'Дайджест лучших рецептов с %%startDate%% по %%endDate%%',
+    'lsdigest_usub_noparams' => 'Отсутствует email или hash',
+    'lsdigest_usub_nouser' => 'Пользователь по данным параметрам не найден',
+    'lsdigest_usub_sys_error' => 'Не удалось отписатся, обратитесь пожалуйста к администратору',
+    'lsdigest_usub_complete' => 'Вы успешно отписались от рассылки дайджестов',
+    'lsdigest_usub_already' => 'Вы уже отписывались от рассылки',
 );
 
