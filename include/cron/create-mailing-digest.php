@@ -97,13 +97,7 @@ class CreateMailingDigest extends Cron
 
             // Get all top topics for period
             $aTopics = $this->oEngine->Topic_GetTopicsRatingByDate($sStartTime, (int) Config::Get('plugin.lsdigest.NumberOfMaterials'));
-
-            foreach ($aTopics as $key => $oTopic) {
-                if (!$oTopic->getTopicAvatar()) {
-                    unset($aTopics[$key]);
-                }
-            }
-
+            
             if (!count($aTopics)) {
 
                 $sMessage = "No data for mailing";
@@ -138,7 +132,7 @@ class CreateMailingDigest extends Cron
                 'endDate' => $sCurrentDate, // Current date
             );
 
-            $oMailing->setMailingTitle($this->oEngine->Lang_Get('plugin_lsdigest_mail_title', $aValuesMap));
+            $oMailing->setMailingTitle($this->oEngine->Lang_Get('plugin.lsdigest.plugin_lsdigest_mail_title', $aValuesMap));
 
             $sText = trim($this->oEngine->Viewer_Fetch(Plugin::GetTemplatePath('lsdigest') . 'topic_list.tpl'));
 
