@@ -143,7 +143,8 @@ class CreateMailingDigest extends Cron
             $oMailing->setFilter(array());
 
             $oMailing->setMailingActive(true);
-            $oMailing->setMailingTalk(Config::Get('plugin.lsdigest.SendTalk'));
+            
+            $oMailing->setMailingTalk(false);
 
             if ($this->oEngine->PluginMailing_ModuleMailing_AddMailing($oMailing)) {
 
