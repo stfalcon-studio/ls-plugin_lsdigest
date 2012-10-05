@@ -27,6 +27,7 @@ class PluginLsdigest extends Plugin {
      * @return boolean
      */
     public function Activate() {
+        $this->Cache_Clean();
         return true;
     }
 
