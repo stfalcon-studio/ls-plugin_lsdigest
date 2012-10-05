@@ -22,8 +22,7 @@ require_once($sDirRoot . "/engine/classes/Cron.class.php");
 class CreateMailingDigest extends Cron
 {
 
-    public function Client()
-    {
+    public function Client() {
 
         $bReadyStatus = true;
 
