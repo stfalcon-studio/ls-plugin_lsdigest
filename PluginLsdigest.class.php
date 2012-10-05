@@ -19,8 +19,7 @@ if (!class_exists('Plugin')) {
     die('Hacking attemp!!');
 }
 
-class PluginLsdigest extends Plugin
-{
+class PluginLsdigest extends Plugin {
 
     /**
      * Plugin Activation

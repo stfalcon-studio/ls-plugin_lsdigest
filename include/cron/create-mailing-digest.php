@@ -96,8 +96,9 @@ class CreateMailingDigest extends Cron
 
             // Get all top topics for period
             $aTopics = $this->oEngine->Topic_GetTopicsRatingByDate($sStartTime, (int) Config::Get('plugin.lsdigest.NumberOfMaterials'));
-
+            
             if (!count($aTopics)) {
+
                 $sMessage = "No data for mailing";
 
                 if ($bL10nActive) {
@@ -130,7 +131,7 @@ class CreateMailingDigest extends Cron
                 'endDate' => $sCurrentDate, // Current date
             );
 
-            $oMailing->setMailingTitle($this->oEngine->Lang_Get('plugin_lsdigest_mail_title', $aValuesMap));
+            $oMailing->setMailingTitle($this->oEngine->Lang_Get('plugin.lsdigest.plugin_lsdigest_mail_title', $aValuesMap));
 
             $sText = trim($this->oEngine->Viewer_Fetch(Plugin::GetTemplatePath('lsdigest') . 'topic_list.tpl'));
 
@@ -138,12 +139,19 @@ class CreateMailingDigest extends Cron
 
             $oMailing->setMailingDate($sCurrentTime);
 
+            $oMailing->setFilter(array());
+
+            $oMailing->setMailingActive(true);
+            
+            $oMailing->setMailingTalk(false);
+
             if ($this->oEngine->PluginMailing_ModuleMailing_AddMailing($oMailing)) {
 
                 $sMessage = "Mailing task ";
                 if ($bL10nActive) {
                     $sMessage .= "for {$sLang} language ";
                 }
+
                 $sMessage .= "#{$oMailing->getMailingId()} created successfully at {$sCurrentTime}";
 
                 echo $sMessage . PHP_EOL;

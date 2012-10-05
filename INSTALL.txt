@@ -24,10 +24,3 @@ $config['DateFormat'] = 'Y-m-d';
 
 После чего необходимо перейти на страницу http://example.com/admin/plugins
 (вместо example.com указывайте адрес своего сайта) и активировать плагин lsdigest
-
-ВАЖНО: после активации плагина нужно очистить кеш сайта.
-
-Для того, чтобы рассылки формировались автоматически нужно поцепить на cron скрипт 
-рассылки /plugins/lsdigest/include/cron/create-mailing-digest.php. У нас он 
-запускается раз в неделю:
-@weekly /plugins/lsdigest/include/cron/create-mailing-digest.php

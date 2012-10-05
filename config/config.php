@@ -24,6 +24,6 @@ $config['NumberOfMaterials'] = 10;
 $config['SenderUserLogin'] = 'admin';
 
 // Формат даты для темы письма
-$config['DateFormat'] = 'Y-m-d';
+$config['DateFormat'] = 'd.m.Y';
 
 return $config;
