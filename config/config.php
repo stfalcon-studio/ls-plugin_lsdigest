@@ -26,6 +26,4 @@ $config['SenderUserLogin'] = 'admin';
 // Формат даты для темы письма
 $config['DateFormat'] = 'd.m.Y';
 
-$config['SendTalk'] = false;
-
 return $config;
