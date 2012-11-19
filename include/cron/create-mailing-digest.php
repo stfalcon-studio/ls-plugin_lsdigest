@@ -7,7 +7,7 @@
  * @Description:
  * @Author: stfalcon-studio
  * @Author URI: http://stfalcon.com
- * @LiveStreet Version: 0.4.2
+ * @LiveStreet Version: 0.5.1
  * @License: GNU GPL v2, http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * ----------------------------------------------------------------------------
  */
@@ -138,6 +138,12 @@ class CreateMailingDigest extends Cron
 
             $oMailing->setMailingDate($sCurrentTime);
 
+            $oMailing->setFilter(array());
+
+            $oMailing->setMailingActive(true);
+
+            $oMailing->setMailingTalk(false);
+
             if ($this->oEngine->PluginMailing_ModuleMailing_AddMailing($oMailing)) {
 
                 $sMessage = "Mailing task ";
@@ -169,4 +175,3 @@ $sLockFilePath = Config::Get('sys.cache.dir') . 'lsdigest.lock';
  */
 $app = new CreateMailingDigest($sLockFilePath);
 print $app->Exec();
-?>
