@@ -19,8 +19,7 @@ require_once("tests/behat/features/bootstrap/BaseFeatureContext.php");
  */
 class FeatureContext extends MinkContext
 {
-    protected $sDirRoot;
-
+   
     public function __construct(array $parameters)
     {
         $this->parameters = $parameters;
