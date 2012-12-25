@@ -7,7 +7,7 @@ Feature: Lsdigest plugin standart features BDD
         Given I am on "/login"
         Then I want to login as "admin"
 
-        Then run send message script
+        Then run script "/plugins/lsdigest/include/cron/create-mailing-digest.php" and result should contain "/Mailing task #[0-9]+ created successfully/"
 
         # Go to mailing list page and check for just create mailing
         Given I am on "/mailing/list"
