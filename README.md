@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/stfalcon-studio/ls-plugin_lsdigest.png?branch=master)](https://travis-ci.org/stfalcon-studio/ls-plugin_lsdigest)
+
 ОПИСАНИЕ
 --------
 
