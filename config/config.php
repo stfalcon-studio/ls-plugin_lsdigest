@@ -17,6 +17,9 @@ $config = array();
 // Количество предыдущих дней, за которые произойдет рассылка
 $config['MailingPeriod'] = 7;
 
+// Рейтинг топиков
+$config['RatingOfTopics'] = 0;
+
 // Количество последних тем
 $config['NumberOfMaterials'] = 10;
 

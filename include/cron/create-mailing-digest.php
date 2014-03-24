@@ -94,8 +94,11 @@ class CreateMailingDigest extends Cron
                 $this->oEngine->Lang_SetLang($sLang);
             }
 
-            // Get all top topics for period
-            $aTopics = $this->oEngine->Topic_GetTopicsRatingByDate($sStartTime, (int) Config::Get('plugin.lsdigest.NumberOfMaterials'));
+            // Get all top topics for period and rating
+            $aTopics = $this->oEngine->PluginLsdigest_Topic_GetTopicsByRatingAndDate(
+                $sStartTime, (int)Config::Get('plugin.lsdigest.NumberOfMaterials'),
+                (int)Config::Get('plugin.lsdigest.RatingOfTopics')
+            );
             
             if (!count($aTopics)) {
 
