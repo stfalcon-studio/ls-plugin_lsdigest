@@ -94,10 +94,21 @@ class CreateMailingDigest extends Cron
                 $this->oEngine->Lang_SetLang($sLang);
             }
 
-            // Get all top topics for period
-            $aTopics = $this->oEngine->Topic_GetTopicsRatingByDate($sStartTime, (int) Config::Get('plugin.lsdigest.NumberOfMaterials'));
-            
-            if (!count($aTopics)) {
+            // Get all top topics for period and rating
+            $oStartDateForFilter = $oInterval->sub(new DateInterval("P1D"));
+            $aFilter = array(
+                'topic_date_more' => $oStartDateForFilter->format('Y-m-d 00:00:00'),
+                'topic_publish'   => 1,
+                'topic_rating'    => array(
+                    'type'  => 'top',
+                    'value' => (int)Config::Get('plugin.lsdigest.RatingOfTopics')
+                )
+            );
+            $aTopics = $this->oEngine->Topic_GetTopicsByFilter(
+                $aFilter, 1, (int)Config::Get('plugin.lsdigest.NumberOfMaterials')
+            );
+
+            if (!$aTopics['count']) {
 
                 $sMessage = "No data for mailing";
 
@@ -110,7 +121,7 @@ class CreateMailingDigest extends Cron
                 continue;
             }
 
-            $this->oEngine->Viewer_Assign('aTopics', $aTopics);
+            $this->oEngine->Viewer_Assign('aTopics', $aTopics['collection']);
 
             // Create Mailing task
             $oMailing = new PluginMailing_ModuleMailing_EntityMailing();
