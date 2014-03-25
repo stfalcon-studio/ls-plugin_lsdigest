@@ -22,19 +22,6 @@ if (!class_exists('Plugin')) {
 class PluginLsdigest extends Plugin {
 
     /**
-     * Указанные в массивы наследования будут переданы движку автоматически
-     * перед инициализацией плагина
-     */
-    public $aInherits = array(
-        'module' => array(
-            'ModuleTopic' => '_ModuleTopic',
-        ),
-        'mapper' => array(
-            'ModuleTopic_MapperTopic' => '_ModuleTopic_MapperTopic',
-        ),
-    );
-
-    /**
      * Plugin Activation
      *
      * @return boolean
