@@ -21,6 +21,15 @@ if (!class_exists('Plugin')) {
 
 class PluginLsdigest extends Plugin {
 
+    public $aInherits = array(
+        'mapper' => array(
+            'ModuleUser_MapperUser' => '_ModuleUser_MapperUser'
+        ),
+        'module' => array(
+            'ModuleUser' => '_ModuleUser',
+        )
+    );
+
     /**
      * Plugin Activation
      *

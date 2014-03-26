@@ -7,16 +7,20 @@
  * @Description:
  * @Author: stfalcon-studio
  * @Author URI: http://stfalcon.com
- * @LiveStreet Version: 0.4.2
+ * @LiveStreet Version: 1.0.1
  * @License: GNU GPL v2, http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * ----------------------------------------------------------------------------
  */
+class PluginLsdigest_ModuleUser extends PluginLsdigest_Inherit_ModuleUser
+{
+    /**
+     * Mapper for PluginLsdigest_ModuleUsers
+     * @var ModuleUser_MapperUser
+     */
 
-/**
- * English Language file
- */
-return array(
-    'plugin_lsdigest_mail_title' => 'Digest of the best topics from %%startDate%% till %%endDate%%',
-    'lsdigest_receive_digest_best_topic'=> 'receive a digest of the best materials',
-);
+    public function UpdateSubscriptionDigest($oUser)
+    {
+        return $this->oMapper->UpdateSubscriptionDigest($oUser);
+    }
 
+}
