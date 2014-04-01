@@ -17,5 +17,6 @@
  */
 return array(
     'plugin_lsdigest_mail_title' => 'Дайджест кращих записів з %%startDate%% по %%endDate%%',
+    'lsdigest_receive_digest_best_topic' => 'отримувати дайджест кращих матеріалів',
 );
 

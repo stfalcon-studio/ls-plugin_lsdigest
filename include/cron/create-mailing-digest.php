@@ -149,11 +149,13 @@ class CreateMailingDigest extends Cron
 
             $oMailing->setMailingDate($sCurrentTime);
 
-            $oMailing->setFilter(array());
+            $oMailing->setFilter(array('user_settings_notice_digest_best_topics' => '1'));
 
             $oMailing->setMailingActive(true);
             
             $oMailing->setMailingTalk(false);
+
+            $oMailing->setMailingType('mailing-digest');
 
             if ($this->oEngine->PluginMailing_ModuleMailing_AddMailing($oMailing)) {
 
