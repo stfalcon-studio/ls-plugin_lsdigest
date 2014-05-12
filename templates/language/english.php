@@ -17,5 +17,6 @@
  */
 return array(
     'plugin_lsdigest_mail_title' => 'Digest of the best topics from %%startDate%% till %%endDate%%',
+    'settings_tuning_notice_digest' => 'Subscribe for digest new'
 );
 
