@@ -29,3 +29,6 @@ $config['DateFormat'] = 'Y-m-d';
 
 Для того, чтобы рассылки формировались автоматически нужно поцепить на cron скрипт рассылки /plugins/lsdigest/include/cron/create-mailing-digest.php. У нас он запускается раз в неделю:
 @weekly /plugins/lsdigest/include/cron/create-mailing-digest.php
+
+Для подписки пользователей на рассылку, нужно после установки плагина, запустить скрипт
+/plugins/lsdigest/include/cron/subscribe-to-digest.php
