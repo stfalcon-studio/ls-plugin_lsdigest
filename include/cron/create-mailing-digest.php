@@ -155,6 +155,8 @@ class CreateMailingDigest extends Cron
             
             $oMailing->setMailingTalk(false);
 
+            $oMailing->setMailingType(Config::Get('plugin.lsdigest.DigestSubscribeName'));
+
             if ($this->oEngine->PluginMailing_ModuleMailing_AddMailing($oMailing)) {
 
                 $sMessage = "Mailing task ";

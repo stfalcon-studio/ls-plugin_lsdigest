@@ -14,6 +14,10 @@
 
 $config = array();
 
+$aParentConfig = Config::Get('plugin.mailing.miling_types');
+$config['DigestSubscribeName'] = 'digest';
+Config::Set('plugin.mailing.miling_types', array_merge($aParentConfig, array($config['DigestSubscribeName'])));
+
 // Количество предыдущих дней, за которые произойдет рассылка
 $config['MailingPeriod'] = 7;
 

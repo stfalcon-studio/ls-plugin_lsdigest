@@ -22,5 +22,6 @@ return array(
     'lsdigest_usub_sys_error' => 'Не удалось отписатся, обратитесь пожалуйста к администратору',
     'lsdigest_usub_complete' => 'Вы успешно отписались от рассылки дайджестов',
     'lsdigest_usub_already' => 'Вы уже отписывались от рассылки',
+    'settings_tuning_notice_digest' => 'Подписатся на рассылку подборок новостей',
 );
 

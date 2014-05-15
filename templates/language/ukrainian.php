@@ -17,5 +17,6 @@
  */
 return array(
     'plugin_lsdigest_mail_title' => 'Дайджест кращих записів з %%startDate%% по %%endDate%%',
+    'settings_tuning_notice_digest' => 'Підписати на розсилку підбірки новин',
 );
 
